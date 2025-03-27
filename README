@@ -1,0 +1,11 @@
+Tetris like puzzle game
+
+- 4x4 grid
+- piece prefabs
+- piece spawner
+- piece placement detection
+- piece pool
+- scoring
+- ui menus
+- win condition
+- levels
