@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -6,6 +7,7 @@ public class GridManager : MonoBehaviour
     public int rows = 4;
     public int cols = 4;
     public int cellSize = 1;
+    public List<Transform> gridCells = new List<Transform>();
     void Start()
     {
         GenerateGrid();
@@ -18,7 +20,9 @@ public class GridManager : MonoBehaviour
             for (int x = 0; x < cols; x++)
             {
                 Vector2 position = new Vector2(x * cellSize, -y * cellSize);
-                Instantiate(cellPrefab, position, Quaternion.identity, transform);
+                GameObject cell = Instantiate(cellPrefab, position, Quaternion.identity, transform);
+                gridCells.Add(cell.transform);
+
             }
         }
     }

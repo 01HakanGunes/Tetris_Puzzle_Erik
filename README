@@ -2,10 +2,13 @@ Tetris like puzzle game
 
 - 4x4 grid
 - piece prefabs
-- piece spawner
+- piece spawner (object pooling)
 - piece placement detection
 - piece pool
 - scoring
 - ui menus
 - win condition
 - levels
+
+Random notes:
+- Create 16 objects with script then import 16 images with correct position data to the objects select random number to enable matching object

@@ -5,6 +5,9 @@ public class Piece : MonoBehaviour
     public float fallSpeed = 2f;
     public float cellSize = 1f;
     private Vector2Int gridPosition;
+    public int idx;
+    public int idy;
+    private bool hasLanded = false;
 
     void Start()
     {
@@ -14,6 +17,8 @@ public class Piece : MonoBehaviour
 
     void Update()
     {
+        if (hasLanded) return;
+
         transform.position += Vector3.down * fallSpeed * Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -36,10 +41,29 @@ public class Piece : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other)
-{
-    if (other.CompareTag("Floor"))
     {
-        fallSpeed = 0;
+        if (other.CompareTag("Floor"))
+        {
+            fallSpeed = 0;
+            hasLanded = true;
+            CheckPlacement();
+        }
     }
-}
+
+    void CheckPlacement()
+    {
+        int currentX = Mathf.RoundToInt(transform.position.x);
+        int currentY = Mathf.RoundToInt(-transform.position.y);
+
+        if (currentX == idx && currentY == idy)
+        {
+            Debug.Log("✅ Correct placement!");
+            // Optional: Snap to exact grid, lock movement
+        }
+        else
+        {
+            Debug.Log("❌ Wrong position.");
+            // Optional: Reset, shake, destroy, etc.
+        }
+    }
 }
