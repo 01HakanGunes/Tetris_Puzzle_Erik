@@ -12,3 +12,4 @@ Tetris like puzzle game
 
 Random notes:
 - Create 16 objects with script then import 16 images with correct position data to the objects select random number to enable matching object
+- next step is fix pieces collide with each other in addition to floor

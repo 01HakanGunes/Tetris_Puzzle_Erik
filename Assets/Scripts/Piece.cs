@@ -2,17 +2,25 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour
 {
+    private PiecePool piecePool;
     public float fallSpeed = 2f;
     public float cellSize = 1f;
-    private Vector2Int gridPosition;
-    public int idx;
-    public int idy;
+    public Vector2Int correctPosition;
+    public SpriteRenderer spriteRenderer;
     private bool hasLanded = false;
 
-    void Start()
+    public void Initialize(Sprite sprite, Vector2Int correctPos, PiecePool pool)
     {
-        Vector3 pos = transform.position;
-        gridPosition = new Vector2Int(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y));
+        spriteRenderer.sprite = sprite;
+        correctPosition = correctPos;
+        piecePool = pool;
+        gameObject.SetActive(false);
+    }
+
+    public void StartFalling()
+    {
+        hasLanded = false;
+        fallSpeed = 2f;
     }
 
     void Update()
@@ -30,13 +38,11 @@ public class Piece : MonoBehaviour
 
     void Move(int dir)
     {
-        int newX = gridPosition.x + dir;
+        float newX = transform.position.x + (dir * cellSize);
 
-        if (newX >= 0 && newX < 4)
+        if (newX >= 0 && newX < piecePool.gridWidth * cellSize)
         {
-            gridPosition.x = newX;
-            Vector3 newPos = new Vector3(gridPosition.x * cellSize, transform.position.y, 0);
-            transform.position = newPos;
+            transform.position = new Vector3(newX, transform.position.y, 0);
         }
     }
 
@@ -52,18 +58,19 @@ public class Piece : MonoBehaviour
 
     void CheckPlacement()
     {
-        int currentX = Mathf.RoundToInt(transform.position.x);
-        int currentY = Mathf.RoundToInt(-transform.position.y);
+        // Convert current position to grid coordinates
+        int currentX = Mathf.RoundToInt(transform.position.x / cellSize);
+        int currentY = Mathf.RoundToInt(-transform.position.y / cellSize);
 
-        if (currentX == idx && currentY == idy)
+        if (currentX == correctPosition.x && currentY == correctPosition.y)
         {
-            Debug.Log("✅ Correct placement!");
-            // Optional: Snap to exact grid, lock movement
+            Debug.Log("Correct placement");
+            piecePool.SpawnNextPiece();
         }
         else
         {
-            Debug.Log("❌ Wrong position.");
-            // Optional: Reset, shake, destroy, etc.
+            Debug.Log("Wrong position returning to pool");
+            piecePool.ReturnToPool(this);
         }
     }
 }
